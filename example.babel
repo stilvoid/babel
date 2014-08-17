@@ -1,0 +1,11 @@
+ fred=My name is Bertie.
+long_test=This is some long text.
+          Lines breaks can be included by indenting
+          level with the opening line
+map[jeff]=bridges
+map[kate]=beckinsale
+ array[0]=first one
+ array[1]=second one
+ array[3]=third one
+noindent=whatever
+   indent=1

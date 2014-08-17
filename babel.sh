@@ -16,28 +16,32 @@ VAR_RE="^( *)($NAME_RE(\[$NAME_RE\])?)( *)=(.*)$"
 IGNORE_RE="(^[[:space:]]*$|^[[:space:]]*#)"
 
 babel_parse() {
-    declare -A vars
+    if [ -z "$1" ]; then
+        babel_help
+        exit 1
+    fi
 
+    container=$1
     last_var=
     cont_re=
-
     output=
-
-    file=${1:--}
+    file=${2:--}
 
     IFS=$'\n'
+
+    echo "declare -A $container;"
 
     for line in $(cat $file); do
         if [[ "$line" =~ $VAR_RE ]]; then
             if [ -n "$last_var" ]; then
-                output+="\"\n"
+                output+="\";\n"
             fi
 
             last_var=${BASH_REMATCH[2]}
             ((indent_len=${#BASH_REMATCH[1]}+${#last_var}+${#BASH_REMATCH[4]}+1))
             value=${BASH_REMATCH[5]}
 
-            output+="$last_var=\"$value"
+            output+="$container[$last_var]=\"$value"
 
             cont_re="^ {$indent_len}(.*)$"
         elif [[ -n "$last_var" && "$line" =~ $cont_re ]]; then
@@ -48,7 +52,7 @@ babel_parse() {
         fi
     done
 
-    output+="\""
+    output+="\";"
 
     echo -e $output
 }

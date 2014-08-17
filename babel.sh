@@ -11,8 +11,7 @@ babel_help() {
 
 NAME_RE="[A-Za-z0-9_]+"
 
-VAR_RE="^( +)?($NAME_RE(\[$NAME_RE\])?)=(.*)$"
-CONT_RE="^( +)?"
+VAR_RE="^( *)($NAME_RE(\[$NAME_RE\])?)( *)=(.*)$"
 
 babel_parse() {
     declare -A vars
@@ -20,27 +19,34 @@ babel_parse() {
     last_var=
     cont_re=
 
+    output=
+
     while IFS= read -r line; do
         #echo "$line"
 
         if [[ "$line" =~ $VAR_RE ]]; then
             if [ -n "$last_var" ]; then
-                echo "\""
+                output+="\"\n"
             fi
 
             last_var=${BASH_REMATCH[2]}
-            ((indent_len=${#last_var}+${#BASH_REMATCH[1]}+1))
-            value=${BASH_REMATCH[4]}
+            ((indent_len=${#BASH_REMATCH[1]}+${#last_var}+${#BASH_REMATCH[4]}+1))
+            value=${BASH_REMATCH[5]}
 
-            echo -n "$last_var=\"$value"
+            output+="$last_var=\"$value"
 
             cont_re="^ {$indent_len}(.*)$"
         elif [[ "$line" =~ $cont_re ]]; then
-            echo -n "\n${BASH_REMATCH[1]}"
+            output+="\\\n${BASH_REMATCH[1]}"
+        else
+            echo "Invalid line: '$line'"
+            exit 1
         fi
     done
 
-    echo "\""
+    output+="\""
+
+    echo -e $output
 }
 
 babel_generate() {

@@ -9,9 +9,11 @@ babel_help() {
     echo
 }
 
-NAME_RE="[A-Za-z0-9_]+"
+NAME_RE="[[:alnum:]_]+"
 
 VAR_RE="^( *)($NAME_RE(\[$NAME_RE\])?)( *)=(.*)$"
+
+IGNORE_RE="(^[[:space:]]*$|^[[:space:]]*#)"
 
 babel_parse() {
     declare -A vars
@@ -38,7 +40,7 @@ babel_parse() {
             cont_re="^ {$indent_len}(.*)$"
         elif [[ "$line" =~ $cont_re ]]; then
             output+="\\\n${BASH_REMATCH[1]}"
-        else
+        elif [[ ! "$line" =~ $IGNORE_RE ]]; then
             echo "Invalid line: '$line'"
             exit 1
         fi

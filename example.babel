@@ -1,20 +1,28 @@
- fred=My name is Bertie.
+# This is pretty messy and ugly but it's for testing ;P
 
+# The basics
+fred=My name is Bertie.
+
+# Multiple lines
 long_test=This is some long text.
           Lines breaks can be included by indenting
           level with the opening line
      
+# Maps
 map[jeff]=bridges
 map[kate]=beckinsale
 
-# Comment
+# Declarations can be indented to line up with others
  array[0]=first one
  array[1]=second one
  array[3]=third one
 
-    # Indented comment
-noindent=whatever
-   indent=1
+    # So can comments
+ indented=whatever
+unindent=1
+# Indenting isn't required
 
+# You can have whitespace either side of the name
 other    =side
           thing
+# Continuation lines must just follow after the position of the equals (=)

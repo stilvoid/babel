@@ -23,9 +23,11 @@ babel_parse() {
 
     output=
 
-    while IFS= read -r line; do
-        #echo "$line"
+    file=${1:--}
 
+    IFS=$'\n'
+
+    for line in $(cat $file); do
         if [[ "$line" =~ $VAR_RE ]]; then
             if [ -n "$last_var" ]; then
                 output+="\"\n"
@@ -58,10 +60,11 @@ babel_generate() {
 
 if [[ ${BASH_SOURCE[0]} == $0 ]]; then
     command=$1
+    shift
 
     case $command in
         -g) babel_generate ;;
-        -p) babel_parse ;;
+        -p) babel_parse $@ ;;
         -h) babel_help ;;
         *) babel_help ;;
     esac

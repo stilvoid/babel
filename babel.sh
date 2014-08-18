@@ -11,7 +11,7 @@ babel_help() {
 
 NAME_RE="[[:alnum:]_]+"
 
-VAR_RE="^( *)($NAME_RE(\[$NAME_RE\])?)( *)=(.*)$"
+VAR_RE="^( *)($NAME_RE(/$NAME_RE)*)( *)=(.*)$"
 
 IGNORE_RE="(^[[:space:]]*$|^[[:space:]]*#)"
 

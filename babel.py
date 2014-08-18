@@ -8,12 +8,77 @@ import re
 import sys
 
 NAME_RE=r"\w+"
-VAR_RE=r"^(?P<ws1> *)(?P<name>{}(?:\[{}\])?)(?P<ws2> *)=(?P<value>.*)$".format(NAME_RE, NAME_RE)
+VAR_RE=r"^(?P<ws1> *)(?P<name>{}(?:/{})*)(?P<ws2> *)=(?P<value>.*)$".format(NAME_RE, NAME_RE)
 IGNORE_RE=r"(?:^\s*$|^\s*#)"
 
-def babel_parse(fh):
+def _babel_get_value(output_dict, name, flat=True):
+    """
+    Gets the value from the correct place in the dict
+    following the flattening rules specified in babel_parse
+    """
+
+    if flat:
+        return output_dict[name]
+    else:
+        temp_dict = output_dict
+
+        for key in name.split("/"):
+            temp_dict = temp_dict[key]
+
+        return temp_dict
+
+def _babel_set_value(output_dict, name, value, flat=True):
+    """
+    Sets the value in the correct place in the dict
+    following the flattening rules specified in babel_parse
+    """
+
+    if flat:
+        output_dict[name] = value
+    else:
+        temp_dict = output_dict
+
+        keys = name.split("/")
+
+        for key in keys[:-1]:
+            if key not in temp_dict:
+                temp_dict[key] = {}
+
+            elif not isinstance(temp_dict[key], dict):
+                old_value = temp_dict[key]
+                temp_dict[key] = {"-": old_value}
+
+            temp_dict = temp_dict[key]
+
+        temp_dict[keys[-1]] = value
+
+def babel_parse(fh, flat=True):
     """
     Given a file handle, parses the babel contents and returns a dict
+    If flat is true, keys will contain all parts of the identifier
+    Otherwise, dicts will be created.
+
+    E.g. `array/0=hello` will become `{"array/0": "hello"}` if flat is True
+    `array/0=hello` will become `{"array": {"0": "hello"}}` if flat is False
+
+    In the case where a value is ascribed to both
+    the initial part of an identifier and a sub-section
+    babel.py will use the special key "-" which is an
+    invalid babel identifier
+
+    E.g.
+        array=hello
+        array/0=world
+        array/1=kitty
+
+    Will become:
+        {
+            "array": {
+                "-": "hello",
+                "0": "world",
+                "1": "kitty",
+            }
+        }
     """
 
     output = {}
@@ -36,12 +101,22 @@ def babel_parse(fh):
                 + 1
             )
 
-            output[var_match.group("name")] = var_match.group("value")
+            _babel_set_value(
+                output,
+                var_match.group("name"),
+                var_match.group("value"),
+                flat=flat
+            )
 
             last_var = var_match.group("name")
 
         elif last_var is not None and cont_match:
-            output[last_var] += "\n{}".format(cont_match.group("value"))
+            _babel_set_value(
+                output,
+                last_var,
+                _babel_get_value(output, last_var, flat=flat) + "\n{}".format(cont_match.group("value")),
+                flat=flat
+            )
 
         elif not re.match(IGNORE_RE, line):
             raise Exception("Invalid line: '{}'".format(line))

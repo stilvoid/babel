@@ -20,26 +20,36 @@ Examples:
 
     `postal_code`
 
-Additionally, the identified may include an index identifier. This can be used to represent related values.
+Additionally, the identifier may contain groupings, delimited by a forward slash (`/`). These can be used to represent related values.
 
 Examples:
 
-    `address[1]`
-    `address[2]`
-    `address[3]`
+    `address/1`
+    `address/2`
+    `address/3`
 
-    `name[first]`
-    `name[last]`
+    `name/first`
+    `name/last`
+
+    `contact/1/title`
+
+Unlike in some data formats, there may be a value associated both with the head of a grouping and with its children.
+
+Example:
+
+    `address`
+    `address/1`
+    `address/2`
 
 ### Values
 
-Pairs of identifiers and values are separated by new lines and values are assigned to identifiers by the equals sign (=).
+Pairs of identifiers and values are separated by new lines and values are assigned to identifiers by the equals sign (`=`).
 
 Examples:
 
     `name=Bruce Willis`
 
-    `address[1]=Fhloston Paradise`
+    `address/1=Fhloston Paradise`
 
 If a value contains more than one line, line after the first should be indented with spaces so that they line up with the first line (after the equals sign).
 
@@ -59,7 +69,7 @@ Example:
 
         # Actor
         name=Bruce Willis
-        address[1]=New York
+        address/1=New York
 
         # Film
         title=Die Hard
@@ -90,18 +100,18 @@ Examples:
 Here's a more realistic example of some babel data.
 
     # Header information
-    title      =Contact list
-    owner      =Mr. Church
-    version    =1
+    title             =Contact list
+    owner             =Mr. Church
+    version           =1
 
     # Begin contact list
-    name[1]    =Barney Ross
-    phone[1]   =555 12345
+    contact/1/name    =Barney Ross
+    contact/1/phone   =555 12345
 
-    name[2]    =Lee Christmas
-    phone[2]   =+44 20 987 6543
-    country[2] =UK
+    contact/2/name    =Lee Christmas
+    contact/2/phone   =+44 20 987 6543
+    contact/2/country =UK
 
-    name[3]    =Yin Yang
-    country[2] =US
+    contact/3/name    =Yin Yang
+    contact/3/country =US
     # End contact list

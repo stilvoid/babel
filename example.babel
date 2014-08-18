@@ -9,13 +9,16 @@ long_test=This is some long text.
           level with the opening line
      
 # Maps
-map[jeff]=bridges
-map[kate]=beckinsale
+map/jeff=bridges
+map/kate=beckinsale
 
 # Declarations can be indented to line up with others
- array[0]=first one
- array[1]=second one
- array[3]=third one
+         array=Numbers
+       array/0=first one
+       array/1=second one
+       array/3=third one
+  array/4/left=fourth
+ array/4/right=one
 
     # So can comments
  indented=whatever

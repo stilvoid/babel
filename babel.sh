@@ -3,9 +3,9 @@
 babel_help() {
     echo "Usage $0 [OPTION]"
     echo
-    echo "  -g        Generate. Converts piped bash variable declarations into babel."
-    echo "  -p        Parse. Converts piped babel into bash variable declarations."
-    echo "  -h        Help. This text."
+    echo "  -g var         Generate. Converts piped bash variable declarations into babel."
+    echo "  -p var <file>  Parse. Converts piped babel into bash variable declarations."
+    echo "  -h             Help. This text."
     echo
 }
 
@@ -58,8 +58,27 @@ babel_parse() {
 }
 
 babel_generate() {
-    echo Not yet implemented
-    exit 1
+    output=
+
+    if [ -z "$1" ]; then
+        babel_help
+        exit 1
+    fi
+
+    data=$(eval declare -p $1)
+
+    eval "declare -A container=${data#*=}"
+
+    for key in ${!container[@]}; do
+        if [[ "${container[$key]}" =~ \\n ]]; then
+            indent=$'\n'
+            indent+="${key//?/ } "
+
+            echo "$key=${container[$key]//\\n/$indent}"
+        else
+            echo $key=${container[$key]}
+        fi
+    done
 }
 
 if [[ ${BASH_SOURCE[0]} == $0 ]]; then
@@ -67,7 +86,7 @@ if [[ ${BASH_SOURCE[0]} == $0 ]]; then
     shift
 
     case $command in
-        -g) babel_generate ;;
+        -g) babel_generate $@ ;;
         -p) babel_parse $@ ;;
         -h) babel_help ;;
         *) babel_help ;;

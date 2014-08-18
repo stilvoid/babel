@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. babel.sh
+
 fail() {
     echo "'$1' did not match '$2'"
     exit 1
@@ -15,28 +17,45 @@ compare() {
     fi
 }
 
-echo "Testing babel.sh"
+test_parse() {
+    foo=""
+    eval $(babel_parse foo)
 
-. babel.sh
+    compare "${#foo[@]}" "15"
+    compare "${foo["fred"]}" "My name is Bertie."
+    compare "${foo["long_test"]}" "This is some long text.\nLines breaks can be included by indenting\nlevel with the opening line"
+    compare "${foo["map/jeff"]}" "bridges"
+    compare "${foo["map/kate"]}" "beckinsale"
+    compare "${foo["array/0"]}" "first one"
+    compare "${foo["array/1"]}" "second one"
+    compare "${foo["array/2"]}" "third one"
+    compare "${foo["array/3"]}" "split"
+    compare "${foo["array/3/left"]}" "fourth"
+    compare "${foo["array/3/right"]}" "one"
+    compare "${foo["other_array/1"]}" "sparse"
+    compare "${foo["other_array/6"]}" "arrays"
+    compare "${foo["indented"]}" "whatever"
+    compare "${foo["unindent"]}" "1"
+    compare "${foo["other"]}" "side\nthing"
+}
 
-eval $(babel_parse foo example.babel)
+echo "Testing babel parsing"
 
-compare "${#foo[@]}" "15"
-compare "${foo["fred"]}" "My name is Bertie."
-compare "${foo["long_test"]}" "This is some long text.\nLines breaks can be included by indenting\nlevel with the opening line"
-compare "${foo["map/jeff"]}" "bridges"
-compare "${foo["map/kate"]}" "beckinsale"
-compare "${foo["array/0"]}" "first one"
-compare "${foo["array/1"]}" "second one"
-compare "${foo["array/2"]}" "third one"
-compare "${foo["array/3"]}" "split"
-compare "${foo["array/3/left"]}" "fourth"
-compare "${foo["array/3/right"]}" "one"
-compare "${foo["other_array/1"]}" "sparse"
-compare "${foo["other_array/6"]}" "arrays"
-compare "${foo["indented"]}" "whatever"
-compare "${foo["unindent"]}" "1"
-compare "${foo["other"]}" "side\nthing"
+test_parse <example.babel
 
 echo
 echo "Success"
+echo
+
+echo "Testing babel generation"
+
+# Re-parse the example file
+eval $(babel_parse bar <example.babel)
+# Generate babel from it
+babel=$(babel_generate bar)
+# And check that the generated babel parses
+test_parse <<<"$babel"
+
+echo
+echo "Success"
+echo

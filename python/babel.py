@@ -73,7 +73,7 @@ def _babel_set_value(output_dict, name, value, flat=True):
 
             elif not isinstance(temp_dict[key], dict):
                 old_value = temp_dict[key]
-                temp_dict[key] = {"-": old_value}
+                temp_dict[key] = {"": old_value}
 
             temp_dict = temp_dict[key]
 
@@ -90,7 +90,7 @@ def babel_parse(fh, flat=True, detect_lists=False):
 
     In the case where a value is ascribed to both
     the initial part of an identifier and a sub-section
-    babel.py will use the special key "-" which is an
+    babel.py will use the special key "" which is an
     invalid babel identifier
 
     E.g.
@@ -101,7 +101,7 @@ def babel_parse(fh, flat=True, detect_lists=False):
     Will become:
         {
             "array": {
-                "-": "hello",
+                "": "hello",
                 "0": "world",
                 "1": "kitty",
             }
@@ -191,7 +191,7 @@ def babel_generate(input_dict, prefix=""):
             indent_len = len(prefix) + len(str(key)) + 1
             value = re.sub(r'\n', "\n{}".format(" " * indent_len), value)
 
-            if key == "-":
+            if key == "":
                 output.append("{}={}".format(prefix[:-1], value))
             else:
                 output.append("{}{}={}".format(prefix, key, value))

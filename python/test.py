@@ -42,7 +42,7 @@ def test(input, flat=True, detect_lists=False):
             compare(foo["array"][1], "second one")
             compare(foo["array"][2], "third one")
             compare(len(foo["array"][3].keys()), 3)
-            compare(foo["array"][3]["-"], "split")
+            compare(foo["array"][3][""], "split")
             compare(foo["array"][3]["left"], "fourth")
             compare(foo["array"][3]["right"], "one")
         else:
@@ -50,7 +50,7 @@ def test(input, flat=True, detect_lists=False):
             compare(foo["array"]["1"], "second one")
             compare(foo["array"]["2"], "third one")
             compare(len(foo["array"]["3"].keys()), 3)
-            compare(foo["array"]["3"]["-"], "split")
+            compare(foo["array"]["3"][""], "split")
             compare(foo["array"]["3"]["left"], "fourth")
             compare(foo["array"]["3"]["right"], "one")
 

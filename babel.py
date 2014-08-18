@@ -171,6 +171,33 @@ def babel_parse(fh, flat=True, detect_lists=False):
 
     return output
 
+def babel_generate(input_dict, prefix=""):
+    """
+    Given a dict, outputs a babel representation as a string
+    """
+
+    output = []
+
+    for key, value in input_dict.items():
+        if isinstance(value, dict):
+            output += babel_generate(value, "{}{}/".format(prefix, key))
+        elif isinstance(value, list):
+            output += babel_generate({
+                index: entry
+                for index, entry
+                in enumerate(value)
+            }, "{}{}/".format(prefix, key))
+        else:
+            indent_len = len(prefix) + len(str(key)) + 1
+            value = re.sub(r'\n', "\n{}".format(" " * indent_len), value)
+
+            if key == "-":
+                output.append("{}={}".format(prefix[:-1], value))
+            else:
+                output.append("{}{}={}".format(prefix, key, value))
+
+    return output
+
 if __name__ == "__main__":
     if len(sys.argv) >= 2:
         fh = open(sys.argv[1], "r")

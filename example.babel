@@ -13,12 +13,16 @@ map/jeff=bridges
 map/kate=beckinsale
 
 # Declarations can be indented to line up with others
-         array=Numbers
-       array/0=first one
-       array/1=second one
-       array/3=third one
-  array/4/left=fourth
- array/4/right=one
+array/0       =first one
+array/1       =second one
+array/2       =third one
+array/3       =split
+array/3/left  =fourth
+array/3/right =one
+
+# Numbered indexes don't have to be sequential
+other_array/1 =sparse
+other_array/6 =arrays
 
     # So can comments
  indented=whatever

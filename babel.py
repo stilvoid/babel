@@ -11,6 +11,33 @@ NAME_RE=r"\w+"
 VAR_RE=r"^(?P<ws1> *)(?P<name>{}(?:/{})*)(?P<ws2> *)=(?P<value>.*)$".format(NAME_RE, NAME_RE)
 IGNORE_RE=r"(?:^\s*$|^\s*#)"
 
+def _babel_detect_lists(output_dict):
+    """
+    Detects sub-lists with numeric, sequential, zero-based keys
+    and converts them into lists
+    """
+
+    try:
+        keys = [int(key) for key in sorted(output_dict.keys())]
+    except Exception:
+        keys = None
+
+    if not keys or keys != list(range(len(keys))):
+        if isinstance(output_dict, dict):
+            return {
+                key: _babel_detect_lists(value)
+                for key, value
+                in output_dict.items()
+            }
+
+        return output_dict
+
+    return [
+        _babel_detect_lists(output_dict[key])
+        for key
+        in sorted(output_dict.keys())
+    ]
+
 def _babel_get_value(output_dict, name, flat=True):
     """
     Gets the value from the correct place in the dict
@@ -52,7 +79,7 @@ def _babel_set_value(output_dict, name, value, flat=True):
 
         temp_dict[keys[-1]] = value
 
-def babel_parse(fh, flat=True):
+def babel_parse(fh, flat=True, detect_lists=False):
     """
     Given a file handle, parses the babel contents and returns a dict
     If flat is true, keys will contain all parts of the identifier
@@ -79,7 +106,25 @@ def babel_parse(fh, flat=True):
                 "1": "kitty",
             }
         }
+
+    If `detect_lists` is True, babel will convert
+    dicts with sequential, zero-based, numeric keys into lists.
+
+    E.g.
+        array/0=one
+        array/1=two
+        array/2=three
+
+    Will become:
+        {
+            "array": ["one", "two", "three"]
+        }
+
+    `detect_lists` implies `flat=False` for obvious reasons
     """
+
+    if detect_lists:
+        flat = False
 
     output = {}
     last_var = None
@@ -120,6 +165,9 @@ def babel_parse(fh, flat=True):
 
         elif not re.match(IGNORE_RE, line):
             raise Exception("Invalid line: '{}'".format(line))
+
+    if detect_lists:
+        output = _babel_detect_lists(output)
 
     return output
 

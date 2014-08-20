@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. babel.sh
+. $(dirname $0)/babel.sh
 
 fail() {
     echo "'$1' did not match '$2'"

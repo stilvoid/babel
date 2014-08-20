@@ -31,6 +31,6 @@ unindent=1
 
 # You can have whitespace either side of the name
 other    =side
-          thing
+         =thing
 # Continuation lines must just follow after the position of the equals (=)
 

@@ -38,12 +38,12 @@ babel_parse() {
             fi
 
             last_var=${BASH_REMATCH[2]}
-            ((indent_len=${#BASH_REMATCH[1]}+${#last_var}+${#BASH_REMATCH[4]}+1))
+            ((indent_len=${#BASH_REMATCH[1]}+${#last_var}+${#BASH_REMATCH[4]}))
             value=${BASH_REMATCH[5]}
 
             output+="$container[$last_var]=\"$value"
 
-            cont_re="^ {$indent_len}(.*)$"
+            cont_re="^ {$indent_len}[ =](.*)$"
         elif [[ -n "$last_var" && "$line" =~ $cont_re ]]; then
             output+="\\\n${BASH_REMATCH[1]}"
         elif [[ ! "$line" =~ $IGNORE_RE ]]; then

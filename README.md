@@ -81,6 +81,15 @@ Example:
               that contains more than one line.
               It's quite readable :)
 
+Optionally, the extra lines may also include the equals sign. This can aid readability where the value contains a blank line.
+
+Example:
+
+    longer_text=This long piece of text
+               =contains a blank line.
+               =
+               =See? :)
+
 ### Comments
 
 Babel files may contain blank lines and comment lines which will be ignored by the parser.

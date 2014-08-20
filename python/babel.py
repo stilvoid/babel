@@ -137,13 +137,12 @@ def babel_parse(fh, flat=True, detect_lists=False):
             cont_match = re.match(cont_re, line)
 
         if var_match:
-            cont_re = "^ {{{}}}(?P<value>.*)$".format(
+            cont_re = "^ {{{}}}[ =](?P<value>.*)$".format(
                 len(var_match.group("ws1"))
                 +
                 len(var_match.group("name"))
                 +
                 len(var_match.group("ws2"))
-                + 1
             )
 
             _babel_set_value(

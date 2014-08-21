@@ -1,5 +1,5 @@
-var VAR_RE = /^( *)(\w+(?:\/\w+)*)( *)=(.*)$/;
-var IGNORE_RE = /(?:^\s*$|^\s*#)/;
+var VAR_RE = /^( *(\w+(?:\/\w+)*) *)=(.*)$/;
+var IGNORE_RE = /^(?:\s*#|\s*$)/;
 
 function babel_detect_arrays(output) {
     var is_arraylike = true;
@@ -98,12 +98,12 @@ function babel_parse(input, options) {
         }
 
         if(match) {
-            cont_re = RegExp("^ {" + (match[1].length + match[2].length + match[3].length) + "}[ =](.*)$");
+            cont_re = RegExp("^ {" + match[1].length + "}[ =](.*)$");
 
             babel_set_value(
                 output,
                 match[2],
-                match[4],
+                match[3],
                 options
             );
 

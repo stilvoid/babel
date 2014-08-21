@@ -8,8 +8,8 @@ import re
 import sys
 
 NAME_RE=r"\w+"
-VAR_RE=r"^(?P<ws1> *)(?P<name>{}(?:/{})*)(?P<ws2> *)=(?P<value>.*)$".format(NAME_RE, NAME_RE)
-IGNORE_RE=r"(?:^\s*$|^\s*#)"
+VAR_RE=r"^(?P<left> *(?P<name>{}(?:/{})*) *)=(?P<value>.*)$".format(NAME_RE, NAME_RE)
+IGNORE_RE=r"^(?:\s*#|\s*$)"
 
 def _babel_detect_lists(output_dict):
     """
@@ -46,13 +46,13 @@ def _babel_get_value(output_dict, name, flat=True):
 
     if flat:
         return output_dict[name]
-    else:
-        temp_dict = output_dict
 
-        for key in name.split("/"):
-            temp_dict = temp_dict[key]
+    temp_dict = output_dict
 
-        return temp_dict
+    for key in name.split("/"):
+        temp_dict = temp_dict[key]
+
+    return temp_dict
 
 def _babel_set_value(output_dict, name, value, flat=True):
     """
@@ -137,13 +137,7 @@ def babel_parse(fh, flat=True, detect_lists=False):
             cont_match = re.match(cont_re, line)
 
         if var_match:
-            cont_re = "^ {{{}}}[ =](?P<value>.*)$".format(
-                len(var_match.group("ws1"))
-                +
-                len(var_match.group("name"))
-                +
-                len(var_match.group("ws2"))
-            )
+            cont_re = "^ {{{}}}[ =](?P<value>.*)$".format(len(var_match.group("left")))
 
             _babel_set_value(
                 output,

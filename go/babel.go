@@ -6,8 +6,8 @@ import (
     "strings"
 )
 
-var line_re, _ = regexp.Compile(`^(\s*(\w+(?:/\w+)*)\s*)=(.*)$`)
-var ignore_re, _ = regexp.Compile(`^(\s*#|\s*$)`)
+var line_re, _ = regexp.Compile(`^( *(\w+(?:/\w+)*) *)=(.*)$`)
+var ignore_re, _ = regexp.Compile(`^(?:\s*#|\s*$)`)
 
 func babelGetValue(output *map[string]string, name string) string {
     return (*output)[name]

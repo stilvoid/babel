@@ -8,8 +8,6 @@ Feature: Parse a babel file
         When I parse the input
         Then I have 1 key
         And I have the key <key> with the value <value>
-        And the <key> is a string
-        And the <value> is a string
 
         Examples:
             | babel                  | key        | value         |
@@ -19,9 +17,9 @@ Feature: Parse a babel file
             | "boolean=true"         | "boolean"  | "true"        |
 
     Scenario Outline: Spaces around key are stripped
-        Given the input "<babel>"
+        Given the input <babel>
         When I parse the input
-        Then I have the key "<key>" with the value "<value>"
+        Then I have the key <key> with the value <value>
 
         Examples:
             | babel          | key    | value   |
@@ -30,14 +28,14 @@ Feature: Parse a babel file
             | " left =right" | "left" | "right" |
 
     Scenario Outline: Spaces around value are not stripped
-        Given the input "<babel>"
+        Given the input <babel>
         When I parse the input
-        Then I have the key "<key>" with the value "<value>"
+        Then I have the key <key> with the value <value>
 
         Examples:
-            | babel          | key    | value   |
-            | "left= right"  | "left" | " right" |
-            | "left=right "  | "left" | "right " |
+            | babel          | key    | value     |
+            | "left= right"  | "left" | " right"  |
+            | "left=right "  | "left" | "right "  |
             | "left= right " | "left" | " right " |
 
     Scenario: Multi-line value with spaces
@@ -46,12 +44,12 @@ Feature: Parse a babel file
             key=Multi-line
                 value
             """
-            When I parse the input
-            Then I have the key "key" with the value:
-                """
-                Multi-line
-                value
-                """
+        When I parse the input
+        Then I have the key "key" with the value:
+            """
+            Multi-line
+            value
+            """
 
     Scenario: Multi-line value with equals
         Given the input:
@@ -59,26 +57,28 @@ Feature: Parse a babel file
             key=Multi-line
                =value
             """
-            When I parse the input
-            Then I have the key "key" with the value:
-                """
-                Multi-line
-                value
-                """
+        When I parse the input
+        Then I have the key "key" with the value:
+            """
+            Multi-line
+            value
+            """
 
+    @wip
     Scenario: Multi-line value with repeated key
         Given the input:
             """
             key=Multi-line
             key=value
             """
-            When I parse the input
-            Then I have the key "key" with the value:
-                """
-                Multi-line
-                value
-                """
+        When I parse the input
+        Then I have the key "key" with the value:
+            """
+            Multi-line
+            value
+            """
 
+    @wip
     Scenario: Multi-line value with repeated key and intervening key
         Given the input:
             """
@@ -86,13 +86,13 @@ Feature: Parse a babel file
             other_key=other value
             key=value
             """
-            When I parse the input
-            Then I have the key "key" with the value:
-                """
-                Multi-line
-                value
-                """
-            And I have the key "other_key" with the value "other value"
+        When I parse the input
+        Then I have the key "key" with the value:
+            """
+            Multi-line
+            value
+            """
+        And I have the key "other_key" with the value "other value"
 
     Scenario: Multi-line value with extra space
         Given the input:
@@ -100,18 +100,20 @@ Feature: Parse a babel file
             key=Multi-line
                  value
             """
-            When I parse the input
-            Then I have the key "key" with the value:
-                """
-                Multi-line
-                 value
-                """
+        When I parse the input
+        Then I have the key "key" with the value:
+            """
+            Multi-line
+             value
+            """
 
+    @wip
     Scenario: Invalid key
         Given the input "invalid-key=valid value"
         When I parse the input
         Then I receive the error "Invalid key: 'invalid-key'"
 
+    @wip
     Scenario: Invalid input
         Given the input "missing equals"
         When I parse the input
@@ -154,7 +156,6 @@ Feature: Parse a babel file
         When I parse the input with the flat option disabled
         Then I have 1 key
         And I have the key "group" with the value:
-            | key     | value    |
             | ""      | "top"    |
             | "one"   | "first"  |
             | "2"     | "second" |

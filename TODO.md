@@ -8,8 +8,6 @@
 
 * Use native-like interfaces for each platform: act like JSON libraries
 
-* Write some gherkin and use across all platforms
-
 * Write benchmarks - publish comparisons with JSON
 
 * Command line client for converting to/from JSON (YAML?)
@@ -29,3 +27,5 @@
 * Python implementation
 
 * Javascript implementation
+
+* Write some gherkin and use across all platforms

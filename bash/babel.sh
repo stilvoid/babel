@@ -39,7 +39,13 @@ babel_parse() {
             ((indent_len=${#BASH_REMATCH[1]}+${#last_var}+${#BASH_REMATCH[4]}))
             value=${BASH_REMATCH[5]}
 
-            eval "$container[$last_var]=\"$value\""
+            key_exists=$(eval "echo \${$container[$last_var]+isset}")
+
+            if [ "$key_exists" ]; then
+                eval "$container[$last_var]+=\"\n$value\""
+            else
+                eval "$container[$last_var]=\"$value\""
+            fi
 
             cont_re="^ {$indent_len}[ =](.*)$"
         elif [[ -n "$last_var" && "$line" =~ $cont_re ]]; then

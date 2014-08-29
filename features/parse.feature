@@ -144,7 +144,7 @@ Feature: Parse a babel file
         And I have the key "group/one" with the value "first"
         And I have the key "group/2" with the value "second"
 
-    @not_bash
+    @not_bash @not_go
     Scenario: Grouping with hierarchical parsing
         Given the input:
             """

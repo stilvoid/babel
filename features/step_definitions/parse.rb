@@ -8,6 +8,8 @@ When /^I parse the input(?: with the flat option (disabled|enabled))?$/ do |flat
         command = "python python/to_json.py"
     when "js"
         command = "node js/to_json.js"
+    when "go"
+        command = "go run go/to_json.go"
     else
         raise "Unknown system for testing"
     end

@@ -14,7 +14,11 @@ func babelGetValue(output *map[string]string, name string) string {
 }
 
 func babelSetValue(output *map[string]string, name string, value string) {
-	(*output)[name] = value
+    if _, ok := (*output)[name]; !ok {
+        (*output)[name] = value
+    } else {
+        (*output)[name] = fmt.Sprintf("%s\n%s", (*output)[name], value)
+    }
 }
 
 func BabelParse(inputString string) map[string]string {
@@ -41,7 +45,7 @@ func BabelParse(inputString string) map[string]string {
 
 			last_var = match[2]
 		} else if last_var != "" && cont_match != nil {
-			babelSetValue(&output, last_var, babelGetValue(&output, last_var)+fmt.Sprintf("\n%s", cont_match[1]))
+			babelSetValue(&output, last_var, cont_match[1])
 		} else if !ignore_re.MatchString(line) {
 			panic(fmt.Sprintf("Invalid line: '%s'", line))
 		}

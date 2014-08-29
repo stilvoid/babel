@@ -1,6 +1,6 @@
 #!/bin/bash
 
-systems=(bash python)
+systems=(bash python js)
 
 for system in ${systems[@]}; do
     if sut=$system cucumber -t ~@wip -t ~@not_$system; then

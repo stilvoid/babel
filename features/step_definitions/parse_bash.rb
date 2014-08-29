@@ -6,6 +6,8 @@ When /^I parse the input(?: with the flat option (disabled|enabled))?$/ do |flat
         command = "bash bash/to_json.sh"
     when "python"
         command = "python python/to_json.py"
+    when "js"
+        command = "node js/to_json.js"
     else
         raise "Unknown system for testing"
     end

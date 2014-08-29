@@ -48,7 +48,11 @@ function babel_get_value(output, name, options) {
 
 function babel_set_value(output, name, value, options) {
     if(options.flat) {
-        output[name] = value;
+        if(!output.hasOwnProperty(name)) {
+            output[name] = value;
+        } else {
+            output[name] += "\n" + value;
+        }
     } else {
         var temp = output;
 
@@ -112,7 +116,7 @@ function babel_parse(input, options) {
             babel_set_value(
                 output,
                 last_var,
-                babel_get_value(output, last_var, options) + "\n" + cont_match[1],
+                cont_match[1],
                 options
             );
         } else if(!IGNORE_RE.test(line)) {

@@ -1,12 +1,23 @@
 #!/bin/bash
 
-systems=(bash python js)
+systems=($@)
+
+if [ ${#systems[@]} -eq 0 ]; then
+    systems=(bash python js)
+fi
+
+declare -A scores
 
 for system in ${systems[@]}; do
     if sut=$system cucumber -t ~@wip -t ~@not_$system; then
-        echo $system passed
+        scores[$system]=passed
     else
-        echo $system failed
-        exit 1
+        scores[$system]=failed
     fi
+done
+
+echo
+
+for system in ${!scores[@]}; do
+    echo $system: ${scores[$system]}
 done

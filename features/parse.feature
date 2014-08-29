@@ -64,7 +64,6 @@ Feature: Parse a babel file
             value
             """
 
-    @wip
     Scenario: Multi-line value with repeated key
         Given the input:
             """
@@ -78,7 +77,6 @@ Feature: Parse a babel file
             value
             """
 
-    @wip
     Scenario: Multi-line value with repeated key and intervening key
         Given the input:
             """

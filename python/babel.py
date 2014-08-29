@@ -61,7 +61,10 @@ def _babel_set_value(output_dict, name, value, flat=True):
     """
 
     if flat:
-        output_dict[name] = value
+        if name not in output_dict:
+            output_dict[name] = value
+        else:
+            output_dict[name] += "\n{}".format(value)
     else:
         temp_dict = output_dict
 
@@ -152,7 +155,7 @@ def babel_parse(fh, flat=True, detect_lists=False):
             _babel_set_value(
                 output,
                 last_var,
-                _babel_get_value(output, last_var, flat=flat) + "\n{}".format(cont_match.group("value")),
+                cont_match.group("value"),
                 flat=flat
             )
 

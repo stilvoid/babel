@@ -3,7 +3,7 @@
 systems=($@)
 
 if [ ${#systems[@]} -eq 0 ]; then
-    systems=(bash python js)
+    systems=(bash python js go)
 fi
 
 declare -A scores

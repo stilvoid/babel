@@ -1,5 +1,9 @@
 # TODO
 
+* Write gherkin for generator
+
+* Support nesting in Go parser
+
 * Write a formal definition of babel syntax
 
 * Refactor each implementation to be more idiomatic
@@ -14,7 +18,6 @@
 
 * C implementation
 
-* Go implementation
 
 * Define a babel schema for aid in validation
 
@@ -29,3 +32,5 @@
 * Javascript implementation
 
 * Write some gherkin and use across all platforms
+
+* Go parser

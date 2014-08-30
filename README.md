@@ -90,6 +90,21 @@ Example:
                =
                =See? :)
 
+Values may even be split apart and interspersed with other values. An example will make this clear.
+
+Example:
+
+    long_text=This long piece of text
+    something=has been broken up but
+    long_text=is still long
+
+Will result the identifier `long_text` being mapped to:
+
+    This long piece of text
+    is still long
+
+and the identifier `something` will contain `has been broken up but`.
+
 ### Comments
 
 Babel files may contain blank lines and comment lines which will be ignored by the parser.
